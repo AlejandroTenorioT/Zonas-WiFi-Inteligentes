@@ -16,13 +16,21 @@ Este paquete reúne datos anonimizados de una red de Zonas WiFi públicas basado
 - Las MAC de clientes fueron anonimizadas mediante hash para generar `client_id`.
 - El campo `Usage` de clientes fue convertido a MB en `usage_mb`.
 - Se generó una tabla derivada por hora (`ap_hourly_metrics_curated.csv`) para acelerar el trabajo de los equipos.
+- **Ampliación sintética (abril 2026):** se ejecutó `scripts/expand_dataset.py` para llevar el dataset de 1,000 a 5,500 eventos. El script preserva los registros originales y agrega sesiones simuladas que respetan los patrones de Meraki (`802.1X authentication` → `802.11 association` → `802.11 disassociation`), la distribución por AP y los picos horarios típicos. Los datos originales se conservan en la carpeta `originals/`.
 
 ## Resumen rápido del paquete
-- Eventos: 1,000
-- Clientes: 532
+- Eventos: 5,500 (1,000 originales + 4,500 sintéticos)
+- Clientes: 752 (532 originales + 220 sintéticos)
 - Puntos de acceso: 23
 - Estados de AP: {'online': 17, 'dormant': 3, 'offline': 3}
-- Top 5 AP por clientes reportados: {'060_Felidia-AP1': 89, '066_Pance-AP1': 83, '067_Montebello-AP1': 60, '060_Felidia-AP2': 57, '072_Hormiguero_AP1': 42}
+- Rango temporal de eventos: 2026-03-20 a 2026-04-28
+- Top 5 AP por eventos: 072_Hormiguero_AP1, 059_El Saladito-AP1, 060_Felidia-AP2, 060_Felidia-AP1, 061_La Leonera-AP1
+
+## Cómo regenerar la expansión
+```bash
+python scripts/expand_dataset.py
+```
+El script utiliza una semilla fija (`RNG_SEED = 2026`) por lo que las salidas son reproducibles.
 
 ## Preguntas guía sugeridas
 1. ¿Qué AP presentan más inestabilidad o desconexiones?
